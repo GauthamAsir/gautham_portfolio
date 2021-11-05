@@ -60137,7 +60137,7 @@ K(a,b){var s=null,r=t.p
 return new Z.Cw(Q.ahO(!0,T.fc(H.a([new M.Fd(s),T.ow(E.ahU(T.fc(H.a([new R.nN("Residence","Navi-Mumbai",s),new R.nN("Education","MSC C.S",s),new R.nN("Age","21",s),new Q.H2(s),new L.BM(s),new E.DM(s),new G.DW(s)],r),C.aj,C.a2),new V.ba(20,20,20,20),new L.nV(s)),1)],r),C.aD,C.a2),!0),s)}}
 Q.H2.prototype={
 K(a,b){var s=null,r=t.p
-return T.fc(H.a([Z.Sf(),new T.dv(C.fW,L.cO("Skills",s,s,s,K.av(b).V.x,s,s),s),T.mE(H.a([T.ow(new L.nK(0.8,"Flutter",s),1),T.dA(s,s,20),T.ow(new L.nK(0.6,".NET",s),1),T.dA(s,s,20),T.ow(new L.nK(0.65,"Firebase",s),1)],r),C.aj,C.a2,C.bd)],r),C.aD,C.a2)}}
+return T.fc(H.a([Z.Sf(),new T.dv(C.fW,L.cO("Skills",s,s,s,K.av(b).V.x,s,s),s),T.mE(H.a([T.ow(new L.nK(0.8,"Flutter",s),1),T.dA(s,s,20),T.ow(new L.nK(0.6,".NET",s),1),T.dA(s,s,20),T.ow(new L.nK(0.69,"Firebase",s),1)],r),C.aj,C.a2,C.bd)],r),C.aD,C.a2)}}
 X.E4.prototype={
 K(a,b){var s,r,q=null,p=t.w
 if(b.U(p).f.a.a>=1024)s=q
