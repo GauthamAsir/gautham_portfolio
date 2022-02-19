@@ -7,9 +7,12 @@ class ProjectCard extends StatelessWidget {
   const ProjectCard({
     Key? key,
     required this.project,
+    required this.onReadMorePressed,
   }) : super(key: key);
 
   final Project project;
+
+  final VoidCallback? onReadMorePressed;
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +38,7 @@ class ProjectCard extends StatelessWidget {
           ),
           Spacer(),
           TextButton(
-            onPressed: () {},
+            onPressed: onReadMorePressed,
             child: Text(
               "Read More >>",
               style: TextStyle(color: primaryColor),
