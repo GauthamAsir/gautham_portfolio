@@ -55,7 +55,7 @@
      https://developers.google.com/web/fundamentals/primers/service-workers -->
 
 <script>
-    var serviceWorkerVersion = '3011761995';
+    var serviceWorkerVersion = '3218974498';
     var scriptLoaded = false;
 
     function loadMainDartJs() {
@@ -89,7 +89,13 @@
             if (!reg.active && (reg.installing || reg.waiting)) {
               // No active web worker and we have installed or are installing
               // one for the first time. Simply wait for it to activate.
-              waitForActivation(reg.installing ?? reg.waiting);
+              if(reg.installing != null) {
+                waitForActivation(reg.installing);
+              }
+              if(reg.waiting != null) {
+                waitForActivation(reg.waiting);
+              }
+              // waitForActivation(reg.installing ?? reg.waiting);
             } else if (!reg.active.scriptURL.endsWith(serviceWorkerVersion)) {
               // When the app updates the serviceWorkerVersion changes, so we
               // need to ask the service worker to update.
