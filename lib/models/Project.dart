@@ -1,10 +1,10 @@
 class Project {
   final String? title, description, longDesc;
 
-  Project({this.title, this.description, this.longDesc});
+  const Project({this.title, this.description, this.longDesc});
 }
 
-List<Project> demo_projects = [
+const List<Project> demo_projects = [
   Project(
       title: "E-Commerce App - Android XML UI",
       description:
@@ -18,6 +18,12 @@ List<Project> demo_projects = [
           "It is an online raw meat(fish, chicken, mutton) shopping application, with admin panel and live tracking for orders placed. It also has E-mail based notification for order status change.",
       longDesc:
           'It is an online sweet shopping application, with admin panel and live tracking for orders placed. It also has E-mail based notification for order status change.'),
+  Project(
+      title: "Stock Wiki",
+      description:
+          "This app shows the advised stock but the experts, in which you can invest in minimum risks",
+      longDesc:
+          'This app shows the advised stock but the experts, in which you can invest in minimum risks'),
   Project(
       title: "WhatsApp Status Saver - Android XML UI",
       description:
