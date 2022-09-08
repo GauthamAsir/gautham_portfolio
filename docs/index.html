@@ -20,11 +20,11 @@
     <!-- iOS meta tags & icons -->
     <meta content="yes" name="apple-mobile-web-app-capable">
     <meta content="black" name="apple-mobile-web-app-status-bar-style">
-    <meta content="responsive_portfolio" name="apple-mobile-web-app-title">
-    <link href="icons/Icon-512.png" rel="apple-touch-icon">
+    <meta content="test_web" name="apple-mobile-web-app-title">
+    <link href="icons/Icon-192.png" rel="apple-touch-icon">
 
-    <link href="icons/Icon-512.png" rel="shortcut icon" type="image/x-icon">
-    <link href="icons/Icon-512.png" rel="icon" type="image/x-icon">
+    <!-- Favicon -->
+    <link href="favicon.png" rel="icon" type="image/png"/>
 
     <title>Gautham Portfolio</title>
     <link href="manifest.json" rel="manifest">
@@ -86,7 +86,7 @@
 
 
 <script>
-    var serviceWorkerVersion = '3068406171';
+    var serviceWorkerVersion = '1828790228';
     var scriptLoaded = false;
     function loadMainDartJs() {
       if (scriptLoaded) {
@@ -117,16 +117,9 @@
               });
             }
             if (!reg.active && (reg.installing || reg.waiting)) {
-
               // No active web worker and we have installed or are installing
               // one for the first time. Simply wait for it to activate.
-              if(reg.installing != null) {
-                waitForActivation(reg.installing);
-              }
-              if(reg.waiting != null) {
-                waitForActivation(reg.waiting);
-              }
-
+              waitForActivation(reg.installing || reg.waiting);
             } else if (!reg.active.scriptURL.endsWith(serviceWorkerVersion)) {
               // When the app updates the serviceWorkerVersion changes, so we
               // need to ask the service worker to update.
@@ -155,20 +148,6 @@
       // Service workers not supported. Just drop the <script> tag.
       loadMainDartJs();
     }
-
-
-</script>
-<script>
-  window.onload = function () {
-        setTimeout(function () {
-          var loadingIndicator = document.getElementById("loading_indicator");
-          if (loadingIndicator) {
-            loadingIndicator.remove();
-          }
-        }, 10000);
-};
-
-
 
 </script>
 </body>

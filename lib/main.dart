@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -33,11 +35,53 @@ class MyApp extends StatelessWidget {
         textTheme: GoogleFonts.poppinsTextTheme(Theme.of(context).textTheme)
             .apply(bodyColor: Colors.white)
             .copyWith(
-          bodyText1: TextStyle(color: bodyTextColor),
-          bodyText2: TextStyle(color: bodyTextColor),
-        ),
+              bodyText1: TextStyle(color: bodyTextColor),
+              bodyText2: TextStyle(color: bodyTextColor),
+            ),
       ),
-      home: HomeScreen(),
+      home: FutureBuilder(
+          future: _initFirebase,
+          builder: (context, snapshot) {
+            if (snapshot.hasError) {
+              log(snapshot.error.toString());
+              return messageWidget(context,
+                  msg: (snapshot.error ?? '').toString());
+            }
+
+            if (snapshot.connectionState == ConnectionState.done) {
+              return const HomeScreen();
+            }
+            return const Scaffold(
+              body: Center(
+                child: SizedBox(
+                  width: 24,
+                  height: 24,
+                  child: CircularProgressIndicator(),
+                ),
+              ),
+            );
+          }),
+    );
+  }
+
+  static Widget messageWidget(BuildContext context,
+      {String? msg, bool useScaffold = true}) {
+    return useScaffold
+        ? Scaffold(
+            body: _messageWidget(context, msg: msg),
+          )
+        : _messageWidget(context, msg: msg);
+  }
+
+  static Widget _messageWidget(BuildContext context, {String? msg}) {
+    return Center(
+      child: SelectableText(
+        (msg ?? 'Something Went Wrong!'),
+        style: Theme.of(context)
+            .textTheme
+            .headline6!
+            .copyWith(fontWeight: FontWeight.w600, color: Colors.red),
+      ),
     );
   }
 }

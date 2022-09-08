@@ -7,7 +7,7 @@
     "rules": "storage.rules"
   },
   "hosting": {
-    "public": "public",
+    "public": "build/web",
     "site": "gauthamasir",
     "ignore": [
       "firebase.json",
