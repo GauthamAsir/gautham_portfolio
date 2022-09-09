@@ -1,10 +1,14 @@
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
-import 'package:responsive_portfolio/constants.dart';
-import 'package:responsive_portfolio/responsive.dart';
+import 'package:get/get.dart';
+import 'package:responsive_portfolio/global.dart';
+import 'package:responsive_portfolio/screens/widgets/responsive.dart';
+import 'package:responsive_portfolio/utils/main_controller.dart';
 
 class HomeBanner extends StatelessWidget {
-  const HomeBanner({Key? key}) : super(key: key);
+  HomeBanner({Key? key}) : super(key: key);
+
+  final MainController homeController = Get.put(MainController());
 
   @override
   Widget build(BuildContext context) {
@@ -49,7 +53,14 @@ class HomeBanner extends StatelessWidget {
                   ),
                 if (!Responsive.isMobileLarge(context))
                   ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        homeController.projectScrollController.animateTo(
+                            homeController.projectScrollController.position
+                                    .maxScrollExtent /
+                                2,
+                            duration: Duration(seconds: 1),
+                            curve: Curves.easeInOutSine);
+                      },
                       style: TextButton.styleFrom(
                           padding: EdgeInsets.symmetric(
                               horizontal: defaultPadding * 2,

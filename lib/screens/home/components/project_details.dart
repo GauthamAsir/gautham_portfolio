@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:responsive_portfolio/models/Project.dart';
-import 'package:responsive_portfolio/responsive.dart';
+import 'package:responsive_portfolio/models/full_data_model.dart';
+import 'package:responsive_portfolio/screens/widgets/responsive.dart';
 
 class ProjectDetail extends StatelessWidget {
-  final Project project;
+  final ProjectModel project;
   final VoidCallback onBackPressed;
 
   const ProjectDetail(

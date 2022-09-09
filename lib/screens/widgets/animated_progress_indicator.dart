@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:responsive_portfolio/constants.dart';
+import 'package:responsive_portfolio/global.dart';
 
 class AnimatedCircularProgressIndicator extends StatelessWidget {
   const AnimatedCircularProgressIndicator({

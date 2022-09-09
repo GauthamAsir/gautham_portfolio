@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:responsive_portfolio/constants.dart';
-import 'package:responsive_portfolio/responsive.dart';
+import 'package:get/get.dart';
+import 'package:responsive_portfolio/global.dart';
+import 'package:responsive_portfolio/screens/widgets/responsive.dart';
+import 'package:responsive_portfolio/utils/main_controller.dart';
 
-import 'components/side_menu.dart';
+import 'widgets/side_menu.dart';
 
 class MainScreen extends StatelessWidget {
-  const MainScreen({Key? key, required this.children}) : super(key: key);
+  MainScreen({Key? key, required this.children}) : super(key: key);
 
   final List<Widget> children;
+
+  final MainController homeController = Get.put(MainController());
 
   @override
   Widget build(BuildContext context) {
@@ -49,6 +53,7 @@ class MainScreen extends StatelessWidget {
                 // 7/9 = 0.78 i.e 78%
                 flex: 7,
                 child: SingleChildScrollView(
+                  controller: homeController.projectScrollController,
                   physics: BouncingScrollPhysics(),
                   child: Column(
                     mainAxisSize: MainAxisSize.min,

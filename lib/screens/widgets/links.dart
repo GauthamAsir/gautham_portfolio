@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:responsive_portfolio/constants.dart';
+import 'package:responsive_portfolio/models/full_data_model.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../global.dart';
+
 class Links extends StatelessWidget {
-  const Links({Key? key}) : super(key: key);
+  final List<LinksModel> list;
+
+  const Links({Key? key, required this.list}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -14,8 +18,7 @@ class Links extends StatelessWidget {
         SizedBox(height: defaultPadding / 2),
         TextButton(
           onPressed: () async {
-            String url =
-                'https://raw.githubusercontent.com/GauthamAsir/gautham_portfolio/base/Resume%20Gautham.pdf';
+            String url = getLinkByName('Resume').url ?? '';
             if (!await launch(url)) throw 'Could not launch $url';
           },
           child: FittedBox(
@@ -41,22 +44,21 @@ class Links extends StatelessWidget {
               Spacer(),
               IconButton(
                 onPressed: () async {
-                  String url =
-                      'https://www.linkedin.com/in/gautham-asir-772500156/';
+                  String url = getLinkByName('LinkedIn').url ?? '';
                   if (!await launch(url)) throw 'Could not launch $url';
                 },
                 icon: SvgPicture.asset("assets/icons/linkedin.svg"),
               ),
               IconButton(
                 onPressed: () async {
-                  String url = 'https://github.com/GauthamAsir';
+                  String url = getLinkByName('Github').url ?? '';
                   if (!await launch(url)) throw 'Could not launch $url';
                 },
                 icon: SvgPicture.asset("assets/icons/github.svg"),
               ),
               IconButton(
                 onPressed: () async {
-                  String url = 'https://twitter.com/Gautham0412';
+                  String url = getLinkByName('Twitter').url ?? '';
                   if (!await launch(url)) throw 'Could not launch $url';
                 },
                 icon: SvgPicture.asset("assets/icons/twitter.svg"),
@@ -67,5 +69,9 @@ class Links extends StatelessWidget {
         ),
       ],
     );
+  }
+
+  LinksModel getLinkByName(String name) {
+    return list.where((element) => element.name! == name).first;
   }
 }

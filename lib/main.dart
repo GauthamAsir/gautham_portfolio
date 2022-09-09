@@ -2,9 +2,14 @@ import 'dart:developer';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:responsive_portfolio/constants.dart';
+import 'package:responsive_portfolio/models/full_data_model.dart';
 import 'package:responsive_portfolio/screens/home/home.dart';
+import 'package:responsive_portfolio/screens/login/login_screen.dart';
+import 'package:responsive_portfolio/screens/widgets/error_screen.dart';
+
+import 'global.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -14,18 +19,20 @@ void main() {
 class MyApp extends StatelessWidget {
   final Future<FirebaseApp> _initFirebase = Firebase.initializeApp(
       options: const FirebaseOptions(
-          apiKey: "AIzaSyCwh6mQH0E97oUoT3SLlsane1YvIs42q_E",
-          authDomain: "fly-ads.firebaseapp.com",
-          projectId: "fly-ads",
-          storageBucket: "fly-ads.appspot.com",
-          messagingSenderId: "6428699133",
-          appId: "1:6428699133:web:0c6d15e49eabf82dd1d194",
-          measurementId: "G-XJXEWCF1E1"));
+          apiKey: "AIzaSyACOdfeLGCWCf0eTJkyKaXPE9FSyGR3Y1c",
+          authDomain: "gautham-portfolio.firebaseapp.com",
+          projectId: "gautham-portfolio",
+          storageBucket: "gautham-portfolio.appspot.com",
+          messagingSenderId: "814428664501",
+          appId: "1:814428664501:web:48df51b0c8a4016701c4fc",
+          measurementId: "G-F8L2VZSH7K"));
 
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    SkillsModel skillsModel = SkillsModel();
+
+    return GetMaterialApp(
       title: 'Gautham Portfolio',
       debugShowCheckedModeBanner: false,
       theme: ThemeData.dark().copyWith(
@@ -39,6 +46,28 @@ class MyApp extends StatelessWidget {
               bodyText2: TextStyle(color: bodyTextColor),
             ),
       ),
+      onGenerateRoute: (RouteSettings routeSettings) {
+        final Map<String, dynamic> args;
+
+        if (routeSettings.arguments != null) {
+          args = routeSettings.arguments as Map<String, dynamic>;
+        } else {
+          args = {};
+        }
+
+        return MaterialPageRoute<void>(
+            settings: routeSettings,
+            builder: (BuildContext context) {
+              switch (routeSettings.name) {
+                case HomeScreen.routeName:
+                  return HomeScreen();
+                case AdminLoginScreen.routeName:
+                  return AdminLoginScreen();
+                default:
+                  return ErrorScreen();
+              }
+            });
+      },
       home: FutureBuilder(
           future: _initFirebase,
           builder: (context, snapshot) {
@@ -61,27 +90,6 @@ class MyApp extends StatelessWidget {
               ),
             );
           }),
-    );
-  }
-
-  static Widget messageWidget(BuildContext context,
-      {String? msg, bool useScaffold = true}) {
-    return useScaffold
-        ? Scaffold(
-            body: _messageWidget(context, msg: msg),
-          )
-        : _messageWidget(context, msg: msg);
-  }
-
-  static Widget _messageWidget(BuildContext context, {String? msg}) {
-    return Center(
-      child: SelectableText(
-        (msg ?? 'Something Went Wrong!'),
-        style: Theme.of(context)
-            .textTheme
-            .headline6!
-            .copyWith(fontWeight: FontWeight.w600, color: Colors.red),
-      ),
     );
   }
 }

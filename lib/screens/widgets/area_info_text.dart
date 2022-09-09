@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:responsive_portfolio/constants.dart';
+import 'package:responsive_portfolio/global.dart';
 
 class AreaInfoText extends StatelessWidget {
   const AreaInfoText({
@@ -19,10 +19,15 @@ class AreaInfoText extends StatelessWidget {
         children: [
           Text(
             title!,
-            style: Theme.of(context).textTheme.bodyText1!.copyWith(color: Colors.white),
+            style: Theme.of(context)
+                .textTheme
+                .bodyText1!
+                .copyWith(color: Colors.white),
           ),
-          Text(text!,
-            style: Theme.of(context).textTheme.bodyText1!,),
+          Text(
+            text!,
+            style: Theme.of(context).textTheme.bodyText1!,
+          ),
         ],
       ),
     );

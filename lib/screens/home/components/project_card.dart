@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:responsive_portfolio/constants.dart';
-import 'package:responsive_portfolio/models/Project.dart';
-import 'package:responsive_portfolio/responsive.dart';
+import 'package:responsive_portfolio/global.dart';
+import 'package:responsive_portfolio/models/full_data_model.dart';
+import 'package:responsive_portfolio/screens/widgets/responsive.dart';
 
 class ProjectCard extends StatelessWidget {
   const ProjectCard({
@@ -10,7 +10,7 @@ class ProjectCard extends StatelessWidget {
     required this.onReadMorePressed,
   }) : super(key: key);
 
-  final Project project;
+  final ProjectModel project;
 
   final VoidCallback? onReadMorePressed;
 

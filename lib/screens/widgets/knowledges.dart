@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:responsive_portfolio/global.dart';
+import 'package:responsive_portfolio/models/full_data_model.dart';
 
-import '../../../constants.dart';
+class Knowledge extends StatelessWidget {
+  final List<KnowledgeModel> list;
 
-class Knowledges extends StatelessWidget {
-  const Knowledges({
+  const Knowledge({
     Key? key,
+    required this.list,
   }) : super(key: key);
 
   @override
@@ -15,16 +18,20 @@ class Knowledges extends StatelessWidget {
       children: [
         Divider(),
         Padding(
-          padding: const EdgeInsets.symmetric(
-              vertical: defaultPadding),
+          padding: const EdgeInsets.symmetric(vertical: defaultPadding),
           child: Text(
             "Knowledges",
             style: Theme.of(context).textTheme.subtitle2,
           ),
         ),
-        KnowledgeText(text: "Flutter, Dart"),
-        KnowledgeText(text: "Android, Java & Kotlin"),
-        KnowledgeText(text: "Github Knowledge"),
+        ListView.builder(
+            itemCount: list.length,
+            shrinkWrap: true,
+            itemBuilder: (_, index) {
+              return KnowledgeText(
+                text: list[index].name ?? '',
+              );
+            })
       ],
     );
   }
