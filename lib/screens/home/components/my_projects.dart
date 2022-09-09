@@ -33,7 +33,7 @@ class _MyProjectsState extends State<MyProjects> {
 
   @override
   void initState() {
-    if (kDebugMode) {
+    if (!kDebugMode) {
       firestore
           .collection('Configs')
           .doc('views')
