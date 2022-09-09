@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:responsive_portfolio/global.dart';
+import 'package:responsive_portfolio/screens/add_project/add_project.dart';
 import 'package:responsive_portfolio/screens/login/components/auth_controller.dart';
 import 'package:responsive_portfolio/screens/widgets/app_text_field.dart';
 import 'package:responsive_portfolio/screens/widgets/responsive.dart';
@@ -23,6 +24,7 @@ class AdminLoginScreen extends StatelessWidget {
               child: authController.loading.value
                   ? CircularProgressIndicator()
                   : SingleChildScrollView(
+                      controller: ScrollController(),
                       physics: BouncingScrollPhysics(),
                       child: Container(
                         padding:
@@ -63,7 +65,7 @@ class AdminLoginScreen extends StatelessWidget {
                               height: 20,
                             ),
                             ElevatedButton(
-                                onPressed: () {
+                                onPressed: () async {
                                   if (authController
                                       .emailController.text.isEmail) {
                                     if (authController
@@ -75,7 +77,15 @@ class AdminLoginScreen extends StatelessWidget {
                                       return;
                                     }
 
-                                    authController.loginUser();
+                                    bool res = await authController.loginUser();
+                                    authController.loading.value = false;
+
+                                    if (res) {
+                                      Get.toNamed(AddProject.routeName);
+                                      return;
+                                    }
+
+                                    showCustomSnackBar('Unable to Login');
 
                                     return;
                                   }

@@ -4,14 +4,41 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:responsive_portfolio/global.dart';
+import 'package:responsive_portfolio/models/full_data_model.dart';
 
 class AuthController extends GetxController {
   TextEditingController emailController = TextEditingController(),
-      passwordController = TextEditingController();
+      passwordController = TextEditingController(),
+      titleController = TextEditingController(),
+      descriptionController = TextEditingController(),
+      longDescController = TextEditingController();
 
-  User? firebaseUser;
+  User? get firebaseUser => auth.currentUser;
 
   RxBool obscure = true.obs, loading = false.obs;
+
+  Future fetchUser() async {}
+
+  Future<bool> addProject(List<ProjectModel> list) async {
+    loading.value = true;
+
+    List<Map<String, dynamic>> maps = [];
+
+    list.forEach((element) {
+      maps.add(element.toMap());
+    });
+
+    var data = await firestore
+        .collection('Configs')
+        .doc('data')
+        .update({'projects': maps}).then((value) {
+      return true;
+    }).catchError((onError) {
+      showCustomSnackBar(onError.toString());
+      return false;
+    });
+    return data;
+  }
 
   Future<bool> loginUser() async {
     loading.value = true;
@@ -23,11 +50,6 @@ class AuthController extends GetxController {
       showCustomSnackBar(onError.toString(), snackType: SnackType.Error);
     });
 
-    if (data.user != null) {
-      firebaseUser = data.user;
-      return true;
-    }
-
-    return false;
+    return data.user != null;
   }
 }
