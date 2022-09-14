@@ -5,8 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:responsive_portfolio/models/full_data_model.dart';
+import 'package:responsive_portfolio/screens/actions_screen/actions_screen.dart';
 import 'package:responsive_portfolio/screens/add_project/add_project.dart';
 import 'package:responsive_portfolio/screens/home/home.dart';
+import 'package:responsive_portfolio/screens/list_projects/list_project.dart';
 import 'package:responsive_portfolio/screens/login/login_screen.dart';
 import 'package:responsive_portfolio/screens/widgets/error_screen.dart';
 
@@ -64,8 +66,15 @@ class MyApp extends StatelessWidget {
                   return HomeScreen();
                 case AdminLoginScreen.routeName:
                   return AdminLoginScreen();
+                case ActionsScreen.routeName:
+                  return ActionsScreen();
+                case ListProject.routeName:
+                  return ListProject();
                 case AddProject.routeName:
-                  return AddProject();
+                  return AddProject(
+                    projectModel:
+                        args.length <= 0 ? null : ProjectModel.fromMap(args),
+                  );
                 default:
                   return ErrorScreen();
               }

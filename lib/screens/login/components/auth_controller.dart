@@ -4,7 +4,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:responsive_portfolio/global.dart';
-import 'package:responsive_portfolio/models/full_data_model.dart';
 
 class AuthController extends GetxController {
   TextEditingController emailController = TextEditingController(),
@@ -19,33 +18,13 @@ class AuthController extends GetxController {
 
   Future fetchUser() async {}
 
-  Future<bool> addProject(List<ProjectModel> list) async {
-    loading.value = true;
-
-    List<Map<String, dynamic>> maps = [];
-
-    list.forEach((element) {
-      maps.add(element.toMap());
-    });
-
-    var data = await firestore
-        .collection('Configs')
-        .doc('data')
-        .update({'projects': maps}).then((value) {
-      return true;
-    }).catchError((onError) {
-      showCustomSnackBar(onError.toString());
-      return false;
-    });
-    return data;
-  }
-
   Future<bool> loginUser() async {
     loading.value = true;
     var data = await auth
         .signInWithEmailAndPassword(
             email: emailController.text, password: passwordController.text)
         .catchError((onError) {
+      loading.value = false;
       log('Error ${onError.toString()}');
       showCustomSnackBar(onError.toString(), snackType: SnackType.Error);
     });

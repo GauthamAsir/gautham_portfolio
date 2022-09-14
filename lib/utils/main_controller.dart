@@ -15,6 +15,25 @@ class MainController extends GetxController {
 
   Rx<FullDataModel> fullDataModel = Rx(FullDataModel());
 
+  Future<bool> addOrUpdateProject(List<ProjectModel> list) async {
+    List<Map<String, dynamic>> maps = [];
+
+    list.forEach((element) {
+      maps.add(element.toMap());
+    });
+
+    var data = await firestore
+        .collection('Configs')
+        .doc('data')
+        .update({'projects': maps}).then((value) {
+      return true;
+    }).catchError((onError) {
+      showCustomSnackBar(onError.toString());
+      return false;
+    });
+    return data;
+  }
+
   Future getData({FetchType? fetchType = FetchType.All}) async {
     switch (fetchType) {
       case FetchType.Skills:
@@ -228,7 +247,7 @@ class MainController extends GetxController {
       }
 
       for (int i = 0; i < data.length; i++) {
-        projects.add(ProjectModel.fromMap(data[i]));
+        projects.add(ProjectModel.fromMap(data[i], position: i, id: i));
       }
 
       fullDataModel.value.projectList = projects;

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:responsive_portfolio/global.dart';
-import 'package:responsive_portfolio/screens/add_project/add_project.dart';
+import 'package:responsive_portfolio/screens/actions_screen/actions_screen.dart';
 import 'package:responsive_portfolio/screens/login/components/auth_controller.dart';
 import 'package:responsive_portfolio/screens/widgets/app_text_field.dart';
 import 'package:responsive_portfolio/screens/widgets/responsive.dart';
@@ -81,7 +81,7 @@ class AdminLoginScreen extends StatelessWidget {
                                     authController.loading.value = false;
 
                                     if (res) {
-                                      Get.toNamed(AddProject.routeName);
+                                      Get.toNamed(ActionsScreen.routeName);
                                       return;
                                     }
 

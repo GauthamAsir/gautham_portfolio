@@ -170,15 +170,16 @@ class ProjectModel {
       'title': title ?? '',
       'description': description ?? '',
       'longDesc': longDesc ?? '',
-      'id': id,
-      'position': position
+      'id': id ?? this.id,
+      'position': position ?? this.position
     };
   }
 
-  static ProjectModel fromMap(Map<String, dynamic> snap) {
+  static ProjectModel fromMap(Map<String, dynamic> snap,
+      {int? id, int? position}) {
     return ProjectModel(
-      id: snap['id'],
-      position: snap['position'],
+      id: snap['id'] ?? id,
+      position: snap['position'] ?? position,
       description: snap['description'] ?? '',
       longDesc: snap['longDesc'] ?? '',
       title: snap['title'] ?? '',

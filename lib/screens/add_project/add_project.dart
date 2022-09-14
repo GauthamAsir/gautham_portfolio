@@ -8,15 +8,22 @@ import 'package:responsive_portfolio/screens/widgets/app_text_field.dart';
 import 'package:responsive_portfolio/utils/main_controller.dart';
 
 class AddProject extends StatelessWidget {
-  static const routeName = '/0412/add_project';
+  static const routeName = '/add_project';
 
-  AddProject({Key? key}) : super(key: key);
+  AddProject({Key? key, this.projectModel}) : super(key: key);
+
+  final ProjectModel? projectModel;
 
   final AuthController authController = Get.put(AuthController());
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
+    if (projectModel != null) {
+      authController.titleController.text = projectModel!.title ?? '';
+      authController.descriptionController.text =
+          projectModel!.description ?? '';
+      authController.longDescController.text = projectModel!.longDesc ?? '';
+    }
 
     return Scaffold(
       body: AnimatedSwitcher(
@@ -98,18 +105,36 @@ class AddProject extends StatelessWidget {
 
                                   List<ProjectModel> list =
                                       main.fullDataModel.value.projectList!;
-                                  list.add(ProjectModel(
-                                      id: list.length,
-                                      position: list.length,
+
+                                  ProjectModel p = ProjectModel(
+                                      id: projectModel != null
+                                          ? projectModel!.id
+                                          : list.length,
+                                      position: projectModel != null
+                                          ? projectModel!.position
+                                          : list.length,
                                       title:
                                           authController.titleController.text,
                                       longDesc: authController
                                           .longDescController.text,
                                       description: authController
-                                          .descriptionController.text));
+                                          .descriptionController.text);
+
+                                  if (projectModel != null) {
+                                    for (int i = 0; i < list.length; i++) {
+                                      if (list[i].id! == projectModel!.id) {
+                                        list[i] = p;
+                                        break;
+                                      }
+                                    }
+                                  } else {
+                                    list.add(p);
+                                  }
+
+                                  authController.loading.value = true;
 
                                   bool res =
-                                      await authController.addProject(list);
+                                      await main.addOrUpdateProject(list);
                                   authController.loading.value = false;
 
                                   if (res) {
@@ -117,6 +142,29 @@ class AddProject extends StatelessWidget {
                                     authController.descriptionController
                                         .clear();
                                     authController.longDescController.clear();
+
+                                    if (projectModel != null) {
+                                      await Get.dialog(
+                                          WillPopScope(
+                                              child: AlertDialog(
+                                                content: Text(
+                                                    'Project Details Updated!'),
+                                                actions: [
+                                                  TextButton(
+                                                      onPressed: () {
+                                                        Get.back();
+                                                      },
+                                                      child: Text('Ok'))
+                                                ],
+                                              ),
+                                              onWillPop: () {
+                                                return Future.value(false);
+                                              }),
+                                          barrierDismissible: false);
+                                      Get.back();
+                                      return;
+                                    }
+
                                     showCustomSnackBar(
                                         'Added Project to Database');
                                     return;
@@ -129,7 +177,8 @@ class AddProject extends StatelessWidget {
                                 showCustomSnackBar('Please enter valid data!',
                                     snackType: SnackType.Warning);
                               },
-                              child: Text('Add')),
+                              child: Text(
+                                  projectModel != null ? 'Update' : 'Add')),
                           const SizedBox(
                             height: 20,
                           ),
