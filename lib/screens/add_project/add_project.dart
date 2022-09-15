@@ -7,24 +7,39 @@ import 'package:responsive_portfolio/screens/login/login_screen.dart';
 import 'package:responsive_portfolio/screens/widgets/app_text_field.dart';
 import 'package:responsive_portfolio/utils/main_controller.dart';
 
-class AddProject extends StatelessWidget {
+class AddProject extends StatefulWidget {
   static const routeName = '/add_project';
 
   AddProject({Key? key, this.projectModel}) : super(key: key);
 
   final ProjectModel? projectModel;
 
+  @override
+  State<AddProject> createState() => _AddProjectState();
+}
+
+class _AddProjectState extends State<AddProject> {
   final AuthController authController = Get.put(AuthController());
 
   @override
-  Widget build(BuildContext context) {
-    if (projectModel != null) {
-      authController.titleController.text = projectModel!.title ?? '';
+  void initState() {
+    authController.titleController.clear();
+    authController.descriptionController.clear();
+    authController.longDescController.clear();
+
+    if (widget.projectModel != null) {
+      authController.titleController.text = widget.projectModel!.title ?? '';
       authController.descriptionController.text =
-          projectModel!.description ?? '';
-      authController.longDescController.text = projectModel!.longDesc ?? '';
+          widget.projectModel!.description ?? '';
+      authController.longDescController.text =
+          widget.projectModel!.longDesc ?? '';
     }
 
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       body: AnimatedSwitcher(
           duration: Duration(milliseconds: 250),
@@ -36,82 +51,82 @@ class AddProject extends StatelessWidget {
                     children: [
                       Text(
                         'You need to authenticate first',
-                        style: Get.textTheme.headline6,
-                      ),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      Center(
-                        child: ElevatedButton(
-                          onPressed: () {
-                            Get.toNamed(AdminLoginScreen.routeName);
-                          },
-                          child: Text('Go to Login'),
-                        ),
-                      )
-                    ],
+                  style: Get.textTheme.headline6,
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                Center(
+                  child: ElevatedButton(
+                    onPressed: () {
+                      Get.toNamed(AdminLoginScreen.routeName);
+                    },
+                    child: Text('Go to Login'),
                   ),
                 )
+              ],
+            ),
+          )
               : Center(
-                  child: SingleChildScrollView(
-                    controller: ScrollController(),
-                    physics: BouncingScrollPhysics(),
-                    child: Container(
-                      margin: EdgeInsets.symmetric(horizontal: 24),
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                      decoration: BoxDecoration(
-                          color: Colors.white12,
-                          borderRadius: BorderRadius.all(Radius.circular(12))),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        mainAxisSize: MainAxisSize.min,
-                        // shrinkWrap: true,
-                        // physics: BouncingScrollPhysics(),
-                        // padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-                        children: [
-                          const SizedBox(
-                            height: 20,
-                          ),
-                          AppTextField(
-                              controller: authController.titleController,
-                              label: 'Title'),
-                          const SizedBox(
-                            height: 20,
-                          ),
-                          AppTextField(
-                              controller: authController.descriptionController,
-                              label: 'Description'),
-                          const SizedBox(
-                            height: 20,
-                          ),
-                          AppTextField(
-                              controller: authController.longDescController,
-                              label: 'Long Description'),
-                          const SizedBox(
-                            height: 20,
-                          ),
-                          ElevatedButton(
-                              onPressed: () async {
-                                if (authController
-                                        .titleController.text.isNotEmpty &&
-                                    authController.descriptionController.text
-                                        .isNotEmpty &&
-                                    authController
-                                        .longDescController.text.isNotEmpty) {
-                                  MainController main =
-                                      Get.put(MainController());
+            child: SingleChildScrollView(
+              controller: ScrollController(),
+              physics: BouncingScrollPhysics(),
+              child: Container(
+                margin: EdgeInsets.symmetric(horizontal: 24),
+                padding:
+                EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                decoration: BoxDecoration(
+                    color: Colors.white12,
+                    borderRadius: BorderRadius.all(Radius.circular(12))),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.min,
+                  // shrinkWrap: true,
+                  // physics: BouncingScrollPhysics(),
+                  // padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                  children: [
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    AppTextField(
+                        controller: authController.titleController,
+                        label: 'Title'),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    AppTextField(
+                        controller: authController.descriptionController,
+                        label: 'Description'),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    AppTextField(
+                        controller: authController.longDescController,
+                        label: 'Long Description'),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    ElevatedButton(
+                        onPressed: () async {
+                          if (authController
+                              .titleController.text.isNotEmpty &&
+                              authController.descriptionController.text
+                                  .isNotEmpty &&
+                              authController
+                                  .longDescController.text.isNotEmpty) {
+                            MainController main =
+                            Get.put(MainController());
 
-                                  List<ProjectModel> list =
-                                      main.fullDataModel.value.projectList!;
+                            List<ProjectModel> list =
+                            main.fullDataModel.value.projectList!;
 
-                                  ProjectModel p = ProjectModel(
-                                      id: projectModel != null
-                                          ? projectModel!.id
+                            ProjectModel p = ProjectModel(
+                                      id: widget.projectModel != null
+                                          ? widget.projectModel!.id
                                           : list.length,
-                                      position: projectModel != null
-                                          ? projectModel!.position
+                                      position: widget.projectModel != null
+                                          ? widget.projectModel!.position
                                           : list.length,
                                       title:
                                           authController.titleController.text,
@@ -120,9 +135,10 @@ class AddProject extends StatelessWidget {
                                       description: authController
                                           .descriptionController.text);
 
-                                  if (projectModel != null) {
+                            if (widget.projectModel != null) {
                                     for (int i = 0; i < list.length; i++) {
-                                      if (list[i].id! == projectModel!.id) {
+                                      if (list[i].id! ==
+                                          widget.projectModel!.id) {
                                         list[i] = p;
                                         break;
                                       }
@@ -133,17 +149,17 @@ class AddProject extends StatelessWidget {
 
                                   authController.loading.value = true;
 
-                                  bool res =
-                                      await main.addOrUpdateProject(list);
-                                  authController.loading.value = false;
+                            bool res =
+                            await main.addOrUpdateProject(list);
+                            authController.loading.value = false;
 
-                                  if (res) {
-                                    authController.titleController.clear();
-                                    authController.descriptionController
-                                        .clear();
-                                    authController.longDescController.clear();
+                            if (res) {
+                              authController.titleController.clear();
+                              authController.descriptionController
+                                  .clear();
+                              authController.longDescController.clear();
 
-                                    if (projectModel != null) {
+                              if (widget.projectModel != null) {
                                       await Get.dialog(
                                           WillPopScope(
                                               child: AlertDialog(
@@ -155,18 +171,18 @@ class AddProject extends StatelessWidget {
                                                         Get.back();
                                                       },
                                                       child: Text('Ok'))
-                                                ],
-                                              ),
-                                              onWillPop: () {
-                                                return Future.value(false);
-                                              }),
-                                          barrierDismissible: false);
-                                      Get.back();
-                                      return;
-                                    }
+                                          ],
+                                        ),
+                                        onWillPop: () {
+                                          return Future.value(false);
+                                        }),
+                                    barrierDismissible: false);
+                                Get.back();
+                                return;
+                              }
 
-                                    showCustomSnackBar(
-                                        'Added Project to Database');
+                              showCustomSnackBar(
+                                  'Added Project to Database');
                                     return;
                                   }
 
@@ -177,16 +193,17 @@ class AddProject extends StatelessWidget {
                                 showCustomSnackBar('Please enter valid data!',
                                     snackType: SnackType.Warning);
                               },
-                              child: Text(
-                                  projectModel != null ? 'Update' : 'Add')),
+                              child: Text(widget.projectModel != null
+                                  ? 'Update'
+                                  : 'Add')),
                           const SizedBox(
                             height: 20,
                           ),
                         ],
-                      ),
-                    ),
-                  ),
-                )),
+                ),
+              ),
+            ),
+          )),
     );
   }
 }

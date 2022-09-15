@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:responsive_portfolio/global.dart';
@@ -17,6 +18,33 @@ class ActionsScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            StreamBuilder(
+              stream: firestore.collection('Configs').doc('views').snapshots(),
+              builder: (BuildContext context,
+                  AsyncSnapshot<DocumentSnapshot<Map<String, dynamic>>>
+                      snapshot) {
+                if (snapshot.hasError || snapshot.hasData) {
+                  return AnimatedSwitcher(
+                      duration: const Duration(milliseconds: 250),
+                      child: snapshot.hasError
+                          ? Text(
+                              'Unable to get Total Views\n${snapshot.error.toString()}',
+                              key: UniqueKey(),
+                              overflow: TextOverflow.ellipsis,
+                              style: Get.textTheme.headline6)
+                          : Text(
+                              'Total Views: ${snapshot.data!.data()!['count'].toString()}',
+                              key: UniqueKey(),
+                              overflow: TextOverflow.ellipsis,
+                              style: Get.textTheme.headline6,
+                            ));
+                }
+                return CircularProgressIndicator();
+              },
+            ),
+            const SizedBox(
+              height: 20,
+            ),
             ElevatedButton(
                 onPressed: () {
                   Get.toNamed(ListProject.routeName);
