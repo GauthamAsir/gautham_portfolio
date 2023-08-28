@@ -26,13 +26,13 @@ class MainScreen extends StatelessWidget {
                   onPressed: () {
                     Scaffold.of(context).openDrawer();
                   },
-                  icon: Icon(Icons.menu),
+                  icon: const Icon(Icons.menu),
                 ),
               ),
             ),
       drawer: Responsive.isDesktop(context) ? null : SideMenu(),
       body: Container(
-        constraints: BoxConstraints(maxWidth: maxWidth),
+        constraints: const BoxConstraints(maxWidth: maxWidth),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -42,10 +42,8 @@ class MainScreen extends StatelessWidget {
                   // 22% of screen
                   // 2+7 = 9 | (2/9) = 0.22 i.e 22%
                   flex: 2,
-                  child: Container(
-                    child: SideMenu(),
-                  )),
-            SizedBox(
+                  child: SideMenu()),
+            const SizedBox(
               width: defaultPadding,
             ),
             Expanded(
@@ -54,7 +52,7 @@ class MainScreen extends StatelessWidget {
                 flex: 7,
                 child: SingleChildScrollView(
                   controller: homeController.projectScrollController,
-                  physics: BouncingScrollPhysics(),
+                  physics: const BouncingScrollPhysics(),
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [...children],

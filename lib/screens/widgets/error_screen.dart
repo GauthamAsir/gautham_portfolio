@@ -14,7 +14,7 @@ class ErrorScreen extends StatelessWidget {
           children: [
             SelectableText(
               'OOps!!!, No Page available',
-              style: Get.textTheme.headline6,
+              style: Get.textTheme.titleLarge,
               textAlign: TextAlign.center,
             ),
             const SizedBox(
@@ -25,7 +25,7 @@ class ErrorScreen extends StatelessWidget {
                   onPressed: () {
                     Get.toNamed(HomeScreen.routeName);
                   },
-                  child: Text('Go to home screen')),
+                  child: const Text('Go to home screen')),
             )
           ],
         ),

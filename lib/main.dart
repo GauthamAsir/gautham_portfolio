@@ -16,11 +16,11 @@ import 'global.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  final Future<FirebaseApp> _initFirebase = Firebase.initializeApp(
+  static final Future<FirebaseApp> _initFirebase = Firebase.initializeApp(
       options: const FirebaseOptions(
           apiKey: "AIzaSyACOdfeLGCWCf0eTJkyKaXPE9FSyGR3Y1c",
           authDomain: "gautham-portfolio.firebaseapp.com",
@@ -30,23 +30,24 @@ class MyApp extends StatelessWidget {
           appId: "1:814428664501:web:48df51b0c8a4016701c4fc",
           measurementId: "G-F8L2VZSH7K"));
 
+  const MyApp({super.key});
+
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    SkillsModel skillsModel = SkillsModel();
-
     return GetMaterialApp(
       title: 'Gautham Portfolio',
       debugShowCheckedModeBanner: false,
       theme: ThemeData.dark().copyWith(
         primaryColor: primaryColor,
+        useMaterial3: true,
         scaffoldBackgroundColor: bgColor,
         canvasColor: bgColor,
         textTheme: GoogleFonts.poppinsTextTheme(Theme.of(context).textTheme)
             .apply(bodyColor: Colors.white)
             .copyWith(
-              bodyText1: TextStyle(color: bodyTextColor),
-              bodyText2: TextStyle(color: bodyTextColor),
+              bodyLarge: const TextStyle(color: bodyTextColor),
+              bodyMedium: const TextStyle(color: bodyTextColor),
             ),
       ),
       onGenerateRoute: (RouteSettings routeSettings) {
@@ -63,20 +64,20 @@ class MyApp extends StatelessWidget {
             builder: (BuildContext context) {
               switch (routeSettings.name) {
                 case HomeScreen.routeName:
-                  return HomeScreen();
+                  return const HomeScreen();
                 case AdminLoginScreen.routeName:
                   return AdminLoginScreen();
                 case ActionsScreen.routeName:
-                  return ActionsScreen();
+                  return const ActionsScreen();
                 case ListProject.routeName:
-                  return ListProject();
+                  return const ListProject();
                 case AddProject.routeName:
                   return AddProject(
                     projectModel:
-                        args.length <= 0 ? null : ProjectModel.fromMap(args),
+                        args.isEmpty ? null : ProjectModel.fromMap(args),
                   );
                 default:
-                  return ErrorScreen();
+                  return const ErrorScreen();
               }
             });
       },

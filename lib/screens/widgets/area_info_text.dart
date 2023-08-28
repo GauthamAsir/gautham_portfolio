@@ -21,12 +21,12 @@ class AreaInfoText extends StatelessWidget {
             title!,
             style: Theme.of(context)
                 .textTheme
-                .bodyText1!
+                .bodyLarge!
                 .copyWith(color: Colors.white),
           ),
           Text(
             text!,
-            style: Theme.of(context).textTheme.bodyText1!,
+            style: Theme.of(context).textTheme.bodyLarge!,
           ),
         ],
       ),
