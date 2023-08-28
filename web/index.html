@@ -29,8 +29,21 @@
   <!-- Favicon -->
   <link rel="icon" type="image/png" href="favicon.png"/>
 
-  <title>gautham_portfolio_2</title>
+  <title>Gautham Portfolio</title>
   <link rel="manifest" href="manifest.json">
+
+  <style>
+      .container {
+        width: 100vw;
+        height: 100vh;
+        display: flex; /* Default Axis is X*/
+        justify-content: center; /* Main Axis */
+        align-items: center; /* Cross Axis */
+      }
+      .indicator{
+        width: 50vw;
+      }
+  </style>
 
   <script>
     // The value below is injected by flutter build, do not touch.
@@ -40,6 +53,11 @@
   <script src="flutter.js" defer></script>
 </head>
 <body>
+
+  <div class="container" id="loading_indicator">
+    <img class="indicator" src="./assets/loading.gif"/>
+  </div>
+
   <script>
     window.addEventListener('load', function(ev) {
       // Download main.dart.js
