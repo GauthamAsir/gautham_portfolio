@@ -2,10 +2,10 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:gautham_portfolio/core/base_widgets/base_app_loading.dart';
 import 'package:gautham_portfolio/misc/globals.dart';
-import 'package:gautham_portfolio/screens/main/main_screen.dart';
 
 import 'core/base_router/app_router.dart';
 import 'core/base_theme/app_theme.dart';
+import 'screens/main/initial_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -46,7 +46,7 @@ class MyApp extends StatelessWidget {
               }
 
               if (snapshot.connectionState == ConnectionState.done) {
-                return const MainScreen();
+                return const InitialScreen();
               }
               return const BaseAppLoading();
             }));

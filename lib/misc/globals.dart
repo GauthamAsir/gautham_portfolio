@@ -1,6 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 import 'app_utils.dart';
+
+FirebaseFirestore database = FirebaseFirestore.instance;
 
 extension ColorExtension on String {
   toColor() {

@@ -2,6 +2,9 @@
 class Assets {
   Assets._();
 
+  static const String imagesDemoVideo = 'assets/images/demo_video.mp4';
+  static const String imagesPlaceHolderImage =
+      'assets/images/place_holder_image.png';
   static const String poppinsPoppinsBlack =
       'assets/fonts/poppins/Poppins-Black.ttf';
   static const String poppinsPoppinsBlackItalic =
