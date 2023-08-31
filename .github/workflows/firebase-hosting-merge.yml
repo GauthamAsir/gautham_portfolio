@@ -18,6 +18,9 @@ jobs:
       - run: flutter --version
       - run: flutter pub get
       - run: flutter build web --release
+      - run: rm -rf public
+      - run: mkdir public
+      - run: cp -a build/web ~/public
 #      - run: flutter clean && flutter pub get && flutter build web --release
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
