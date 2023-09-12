@@ -45,7 +45,7 @@ dependencies:
   firebase_auth: ^4.8.0
   flutter_riverpod: ^2.3.10
   video_player: ^2.7.1
-  scrollable_positioned_list: ^0.3.8
+  rive: ^0.11.16
 
 dev_dependencies:
   flutter_test:
@@ -72,6 +72,7 @@ flutter:
   assets:
     - assets/svg/
     - assets/images/
+    - assets/rive/
 
   fonts:
     - family: Poppins

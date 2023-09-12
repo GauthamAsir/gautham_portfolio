@@ -4,8 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:gautham_portfolio/core/base_theme/colors.dart';
 import 'package:gautham_portfolio/core/base_widgets/base_scaffold.dart';
 import 'package:gautham_portfolio/core/base_widgets/base_text.dart';
+import 'package:gautham_portfolio/generated/assets.dart';
 import 'package:gautham_portfolio/misc/globals.dart';
 import 'package:gautham_portfolio/models/project_model.dart';
+import 'package:rive/rive.dart';
 
 class MainScreen extends StatefulWidget {
   static const routeName = '/main_screen';
@@ -23,6 +25,9 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
 
   late AnimationController _controller;
   late Animation<Offset> _offsetAnimation;
+
+  OverlayEntry? _overlayEntry;
+  late AnimationController _animationController;
 
   handleState() {
     if (mounted) {
@@ -43,6 +48,87 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
     });
   }
 
+  void showOverlay() {
+    OverlayState overlayState = Overlay.of(context);
+    _overlayEntry = OverlayEntry(builder: (context) {
+      final animation = CurvedAnimation(
+        parent: _animationController,
+        curve: Curves.easeInOut,
+      );
+
+      final width = Tween<double>(begin: 100, end: 200).animate(animation);
+      final height = Tween<double>(begin: 100, end: 200).animate(animation);
+
+      return Positioned(
+        left: MediaQuery.of(context).size.width * 0.5,
+        top: MediaQuery.of(context).size.height * .15,
+        child: AnimatedBuilder(
+          animation: _animationController,
+          builder: (context, child) => Material(
+            color: Colors.transparent,
+            child: Hero(
+              tag: '004',
+              child: Container(
+                // width: 500,
+                // height: MediaQuery
+                //     .of(context)
+                //     .size
+                //     .height -
+                //     (MediaQuery
+                //         .of(context)
+                //         .size
+                //         .height * .15) * 2,
+                width: width.value,
+                height: height.value,
+                decoration: BoxDecoration(
+                    color: Colors.white.withOpacity(.6),
+                    boxShadow: [
+                      BoxShadow(
+                          color: CustomColors.accentColor,
+                          offset: const Offset(0, 0),
+                          spreadRadius: 1,
+                          blurRadius: 20)
+                    ]),
+                child: Column(
+                  children: [
+                    Align(
+                      alignment: Alignment.centerRight,
+                      child: IconButton(
+                          onPressed: () {
+                            selectedIndex = -1;
+                            _controller.forward(from: 0.0);
+                            _overlayEntry?.remove();
+                            handleState();
+                          },
+                          icon: const Icon(
+                            Icons.close,
+                            color: Colors.black,
+                          )),
+                    )
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+
+      return ProjectDetailWidget(
+        overlayEntry: _overlayEntry!,
+        onClose: () {
+          selectedIndex = -1;
+          _controller.forward(from: 0.0);
+          _overlayEntry?.remove();
+          handleState();
+        },
+        controller: _animationController,
+        height: height.value,
+        width: width.value,
+      );
+    });
+    overlayState.insert(_overlayEntry!);
+  }
+
   @override
   void initState() {
     getAllProjects();
@@ -59,6 +145,13 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
       curve: Curves.easeInOut,
     ));
     _controller.forward();
+
+    _animationController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 500),
+    );
+
+    _animationController.forward();
   }
 
   @override
@@ -80,106 +173,140 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             descriptionWidget(),
-            const SizedBox(
-              width: 0,
-            ),
+            Builder(builder: (context) {
+              ProjectModel? projectModel;
+
+              if (selectedIndex >= 0 &&
+                  projectsList.isNotEmpty &&
+                  selectedIndex <= projectsList.length) {
+                projectModel = projectsList[selectedIndex];
+              }
+
+              return SizedBox(
+                width: projectModel == null ? 0 : 80,
+              );
+            }),
             Expanded(
                 flex: 5,
                 child: SingleChildScrollView(
-                  child: Stack(
-                    clipBehavior: Clip.hardEdge,
-                    alignment: Alignment.center,
-                    children: [
-                      Container(
-                        height: projectsList.length * 200,
-                      ),
-                      ...List.generate(projectsList.length + 1, (index) {
-                        if (index < projectsList.length) {
-                          return Positioned(
-                            top: (index * 160).toDouble(),
-                            right: (index % 2) != 0 ? 0 : 180,
-                            child: InkWell(
-                              borderRadius:
-                                  const BorderRadius.all(Radius.circular(100)),
-                              onTap: () {
-                                selectedIndex = index;
-                                _controller.forward(from: 0.0);
-                                handleState();
-                              },
-                              child: Container(
-                                width: 200,
-                                height: 200,
-                                // margin:
-                                //     const EdgeInsets.symmetric(vertical: 12),
-                                decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    color: Colors.white.withOpacity(.6),
-                                    image: DecorationImage(
-                                        image: CachedNetworkImageProvider(
-                                            projectsList[index].image ?? ''),
-                                        fit: BoxFit.cover,
-                                        colorFilter: ColorFilter.mode(
-                                            Colors.white.withOpacity(.6),
-                                            BlendMode.colorBurn)),
-                                    boxShadow: [
-                                      BoxShadow(
-                                          color: CustomColors.accentColor,
-                                          offset: const Offset(0, 0),
-                                          spreadRadius: 1,
-                                          blurRadius: 20)
-                                    ]),
-                                // child: NetworkImageItem(
-                                //   projectsList[index].image ?? '',
-                                //   boxFit: BoxFit.cover,
-                                //   radius: 100,
-                                // ),
+                  child: Builder(builder: (context) {
+                    // ProjectModel? projectModel;
+                    //
+                    // if (selectedIndex >= 0 &&
+                    //     projectsList.isNotEmpty &&
+                    //     selectedIndex <= projectsList.length) {
+                    //   projectModel = projectsList[selectedIndex];
+                    // }
+
+                    return AnimatedSwitcher(
+                      duration: const Duration(milliseconds: 300),
+                      child: Stack(
+                        clipBehavior: Clip.hardEdge,
+                        alignment: Alignment.center,
+                        children: [
+                          Container(
+                            height: projectsList.length * 200,
+                          ),
+                          ...List.generate(projectsList.length + 1, (index) {
+                            if (index < projectsList.length) {
+                              return Positioned(
+                                top: (index * 160).toDouble(),
+                                right: (index % 2) != 0 ? 0 : 180,
+                                child: Hero(
+                                  tag: '004',
+                                  child: InkWell(
+                                    borderRadius: const BorderRadius.all(
+                                        Radius.circular(100)),
+                                    onTap: () {
+                                      selectedIndex = index;
+                                      _controller.forward(from: 0.0);
+                                      handleState();
+                                      // showOverlay();
+                                    },
+                                    child: Container(
+                                      width: 200,
+                                      height: 200,
+                                      // margin:
+                                      //     const EdgeInsets.symmetric(vertical: 12),
+                                      decoration: BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          color: Colors.white.withOpacity(.6),
+                                          image: DecorationImage(
+                                              image: CachedNetworkImageProvider(
+                                                  projectsList[index].image ??
+                                                      ''),
+                                              fit: BoxFit.cover,
+                                              colorFilter: ColorFilter.mode(
+                                                  Colors.white.withOpacity(.6),
+                                                  BlendMode.colorBurn)),
+                                          boxShadow: [
+                                            BoxShadow(
+                                                color: CustomColors.accentColor,
+                                                offset: const Offset(0, 0),
+                                                spreadRadius: 1,
+                                                blurRadius: 20)
+                                          ]),
+                                      // child: NetworkImageItem(
+                                      //   projectsList[index].image ?? '',
+                                      //   boxFit: BoxFit.cover,
+                                      //   radius: 100,
+                                      // ),
+                                    ),
+                                  ),
+                                ),
+                              );
+                            }
+                            return Positioned(
+                              top: (index * 160).toDouble(),
+                              right: (index % 2) != 0 ? 0 : 180,
+                              child: InkWell(
+                                onTap: () {
+                                  selectedIndex = -1;
+                                  _controller.forward(from: 0.0);
+                                  _overlayEntry?.remove();
+                                  handleState();
+                                },
+                                child: Container(
+                                    width: 200,
+                                    height: 200,
+                                    // margin:
+                                    //     const EdgeInsets.symmetric(vertical: 12),
+                                    decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        color: Colors.white.withOpacity(.6),
+                                        boxShadow: [
+                                          BoxShadow(
+                                              color: CustomColors.accentColor,
+                                              offset: const Offset(0, 0),
+                                              spreadRadius: 1,
+                                              blurRadius: 20)
+                                        ]),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        const ProfileButton(),
+                                        const SizedBox(
+                                          height: 10,
+                                        ),
+                                        BaseText(
+                                          'Contact',
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .bodyLarge!
+                                              .copyWith(color: Colors.black),
+                                        ),
+                                      ],
+                                    )),
                               ),
-                            ),
-                          );
-                        }
-                        return Positioned(
-                          top: (index * 160).toDouble(),
-                          right: (index % 2) != 0 ? 0 : 180,
-                          child: Container(
-                              width: 200,
-                              height: 200,
-                              // margin:
-                              //     const EdgeInsets.symmetric(vertical: 12),
-                              decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: Colors.white.withOpacity(.6),
-                                  boxShadow: [
-                                    BoxShadow(
-                                        color: CustomColors.accentColor,
-                                        offset: const Offset(0, 0),
-                                        spreadRadius: 1,
-                                        blurRadius: 20)
-                                  ]),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  const Icon(
-                                    Icons.perm_contact_calendar_outlined,
-                                    size: 120,
-                                    color: Colors.black,
-                                  ),
-                                  const SizedBox(
-                                    height: 10,
-                                  ),
-                                  BaseText(
-                                    'Contact',
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .bodyLarge!
-                                        .copyWith(color: Colors.black),
-                                  ),
-                                ],
-                              )),
-                        );
-                      }).toList()
-                    ],
-                  ),
+                            );
+                          }).toList()
+                        ],
+                      ),
+                    );
+                  }),
                 ))
           ],
         ),
@@ -419,5 +546,170 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
             ),
           ),
         ));
+  }
+}
+
+class ProjectDetailWidget extends StatefulWidget {
+  final OverlayEntry overlayEntry;
+  final VoidCallback onClose;
+  final AnimationController controller;
+  final double width, height;
+
+  const ProjectDetailWidget(
+      {super.key,
+      required this.overlayEntry,
+      required this.onClose,
+      required this.controller,
+      required this.width,
+      required this.height});
+
+  @override
+  State<ProjectDetailWidget> createState() => _ProjectDetailWidgetState();
+}
+
+class _ProjectDetailWidgetState extends State<ProjectDetailWidget>
+    with SingleTickerProviderStateMixin {
+  @override
+  Widget build(BuildContext context) {
+    return Positioned(
+      left: MediaQuery.of(context).size.width * 0.5,
+      top: MediaQuery.of(context).size.height * .15,
+      child: AnimatedBuilder(
+        animation: widget.controller,
+        builder: (context, child) => Material(
+          color: Colors.transparent,
+          child: Hero(
+            tag: '004',
+            child: Container(
+              // width: 500,
+              // height: MediaQuery
+              //     .of(context)
+              //     .size
+              //     .height -
+              //     (MediaQuery
+              //         .of(context)
+              //         .size
+              //         .height * .15) * 2,
+              width: widget.width,
+              height: widget.height,
+              decoration: BoxDecoration(
+                  color: Colors.white.withOpacity(.6),
+                  boxShadow: [
+                    BoxShadow(
+                        color: CustomColors.accentColor,
+                        offset: const Offset(0, 0),
+                        spreadRadius: 1,
+                        blurRadius: 20)
+                  ]),
+              child: Column(
+                children: [
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: IconButton(
+                        onPressed: () {
+                          widget.onClose();
+                        },
+                        icon: const Icon(
+                          Icons.close,
+                          color: Colors.black,
+                        )),
+                  )
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class ProfileButton extends StatefulWidget {
+  const ProfileButton({super.key});
+
+  @override
+  State<ProfileButton> createState() => _ProfileButtonState();
+}
+
+class _ProfileButtonState extends State<ProfileButton> {
+  Artboard? _birdArtboard;
+  SMIBool? hoverOut;
+
+  StateMachineController? stateMachineController;
+
+  @override
+  void initState() {
+    super.initState();
+
+    RiveFile.asset(Assets.riveProfileRive).then((value) {
+      Artboard artboard = value.artboards.first;
+
+      artboard.forEachComponent(
+        (child) {
+          if (child is Fill) {
+            Fill fill = child;
+            fill.paint.color = Colors.black;
+          } else if (child is Shape) {
+            Shape shape = child;
+
+            if (shape.fills.isNotEmpty) {
+              shape.fills.first.paint.color = Colors.black;
+            }
+          }
+        },
+      );
+
+      for (var element in artboard.fills) {
+        element.paint.color = Colors.transparent;
+      }
+
+      stateMachineController =
+          StateMachineController.fromArtboard(artboard, "State Machine 1");
+
+      if (stateMachineController != null) {
+        value.mainArtboard.addController(stateMachineController!);
+
+        hoverOut = stateMachineController!.findSMI('Hover');
+        if (hoverOut != null) {
+          hoverOut?.change(false);
+        }
+      }
+
+      _birdArtboard = value.mainArtboard;
+
+      setState(() {});
+      return null;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 150,
+      width: 150,
+      margin: const EdgeInsets.symmetric(horizontal: 75),
+      child: InkWell(
+        onHover: (val) {
+          hoverOut?.change(val);
+          // setState(() {});
+        },
+        hoverColor: Colors.transparent,
+        onTap: () {},
+        // child: Rive(artboard: ),
+        child: _birdArtboard != null
+            ? Rive(
+                artboard: _birdArtboard!,
+                fit: BoxFit.cover,
+              )
+            : const SizedBox(),
+        // child:
+        //     RiveAnimation.asset(Assets.riveBagRive, controllers: [_controller]),
+        // child: _birdArtboard != null
+        //     ? RiveAnimation.asset(
+        //         Assets.riveBagRive,
+        //       )
+        //     : const SizedBox(),
+      ),
+    );
   }
 }

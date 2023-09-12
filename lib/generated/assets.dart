@@ -41,5 +41,9 @@ class Assets {
       'assets/fonts/poppins/Poppins-Thin.ttf';
   static const String poppinsPoppinsThinItalic =
       'assets/fonts/poppins/Poppins-ThinItalic.ttf';
+  static const String riveBagRive = 'assets/rive/bag_rive.riv';
+  static const String riveGamecharecterwithconstraint =
+      'assets/rive/gamecharecterwithconstraint.riv';
+  static const String riveProfileRive = 'assets/rive/profile_rive.riv';
   static const String svgAppstore = 'assets/svg/appstore.png';
 }
